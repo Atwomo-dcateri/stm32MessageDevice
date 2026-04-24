@@ -1,6 +1,7 @@
+
 /**
  * @file comm_protocol.h
- * @brief 协议编解码（帧打包/解析/校验）
+ * @brief 协议编解码（帧打包/解析/校验）- CRC16-CCITT 版本
  */
 
 #ifndef COMM_PROTOCOL_H
@@ -19,12 +20,12 @@ typedef struct {
 /* ========== API 函数 ========== */
 
 /**
- * @brief 计算 CRC8 校验值
+ * @brief 计算 CRC16-CCITT 校验值
  * @param data 数据指针
  * @param len 数据长度
- * @return CRC8 值
+ * @return CRC16 值
  */
-uint8_t Proto_CalcCRC(const uint8_t *data, uint8_t len);
+uint16_t Proto_CalcCRC16(const uint8_t *data, uint8_t len);
 
 /**
  * @brief 打包帧
@@ -42,7 +43,6 @@ uint16_t Proto_Pack(const Frame *frame, uint8_t *buffer);
  * @return 0:成功, -1:失败
  */
 int8_t Proto_Unpack(const uint8_t *buffer, uint16_t len, Frame *frame);
-
 /**
  * @brief 创建 OLED 表情帧
  * @param emotion 表情名称字符串

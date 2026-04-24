@@ -23,7 +23,7 @@
 #define FRAME_HEAD_L            0x55
 #define FRAME_TAIL              0xBB
 #define MAX_DATA_LEN            250
-#define FRAME_MIN_LEN           7       // HEAD(2) + LEN(1) + TYPE(1) + CRC(1) + TAIL(1)
+#define FRAME_MIN_LEN           8       // HEAD(2) + TYPE(1) + LEN(1) + CRC(2) + TAIL(1)
 
 /* ========== 帧类型定义 ========== */
 // STM32 → 树莓派
