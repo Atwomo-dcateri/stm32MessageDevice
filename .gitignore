@@ -1,0 +1,27 @@
+# Keil/MDK user-specific files
+*.uvguix.*
+*.uvoptx
+
+# Keil build outputs
+*.axf
+*.bin
+*.crf
+*.d
+*.dep
+*.hex
+*.htm
+*.lnp
+*.lst
+*.map
+*.o
+*.sct
+
+# VS Code local files
+.vscode/keil-assistant.log
+.vscode/uv4.log.lock
+
+# Keil build directories
+MDK-ARM/AiDeviceMessage/
+
+# Optional stray project copy at repo root
+/AiDeviceMessage.uvprojx
