@@ -22,12 +22,12 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "pi_comm.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-PiComm_HandleTypeDef pi_comm_obj;
+
 extern  UART_HandleTypeDef huart1;
 /* USER CODE END TD */
 

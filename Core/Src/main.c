@@ -27,14 +27,14 @@
 #include "stm32f1xx_hal.h"   
 #include "stm32f1xx_hal_uart.h"
 #include "test.h"
-#include "pi_comm.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 extern UART_HandleTypeDef huart1;
 extern TIM_HandleTypeDef htim2;
-PiComm_HandleTypeDef pi_comm_obj;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -104,7 +104,7 @@ int main(void)
   vPwmInit();
   vServoInit();
 
- PiComm_Init(&pi_comm_obj, &huart1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,7 +114,7 @@ int main(void)
     /* USER CODE END WHILE */
     
     /* USER CODE BEGIN 3 */
-    PiComm_Task(&pi_comm_obj);
+
     vExecute();
     
   }
