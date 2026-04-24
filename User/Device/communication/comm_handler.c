@@ -5,24 +5,12 @@
 
 #include "comm_handler.h"
 #include <string.h>
-
-/* 假设已有外设驱动头文件 */
-/* #include "oled_driver.h" */
-/* #include "servo_driver.h" */
-/* #include "max30102_driver.h" */
+#include "oled/oled.h"
+#include "servo/servo_device.h"
+#include "max30102/max30102.h"
 
 /* 外部声明的 USART 发送函数（需根据实际实现） */
 extern void UART_SendBytes(const uint8_t *data, uint16_t len);
-
-/* 暂存的外设函数（实际使用时替换为真实驱动） */
-static inline void oled_show_emotion(const char *emotion, uint8_t confidence) { (void)emotion; (void)confidence; }
-static inline void oled_show_text(const char *text, uint8_t x, uint8_t y) { (void)text; (void)x; (void)y; }
-static inline void oled_clear(void) {}
-static inline void servo_set_angle(uint8_t servo_id, uint8_t angle, uint8_t speed) { (void)servo_id; (void)angle; (void)speed; }
-static inline uint8_t max30102_get_heart_rate(void) { return 75; }
-static inline uint8_t max30102_get_oxygen(void) { return 98; }
-static inline bool max30102_is_finger_detected(void) { return true; }
-static inline uint8_t max30102_get_status(void) { return 1; }
 
 /* 处理器上下文 */
 static struct {
@@ -32,6 +20,68 @@ static struct {
     uint32_t heartbeat_interval_ms;
     uint32_t timeout_ms;
 } g_handler;
+
+static bool oled_show_text(const char *text, uint8_t x, uint8_t y)
+{
+    uint8_t page;
+
+    if (text == NULL) {
+        return false;
+    }
+
+    page = (uint8_t)(y / 8U);
+    if (page > 7U) {
+        page = 7U;
+    }
+
+    OLED_ShowString(x, page, (uint8_t *)text, 16);
+    return true;
+}
+
+static bool oled_show_emotion(const char *emotion, uint8_t confidence)
+{
+    if (emotion == NULL) {
+        return false;
+    }
+
+    OLED_Clear();
+    OLED_ShowString(0, 0, (uint8_t *)emotion, 16);
+    OLED_ShowString(0, 2, (uint8_t *)"CF:", 16);
+    OLED_ShowNum(24, 2, confidence, 3, 16);
+    return true;
+}
+
+static bool oled_clear(void)
+{
+    OLED_Clear();
+    return true;
+}
+
+static bool servo_set_angle(uint8_t servo_id, uint8_t angle, uint8_t speed)
+{
+    return Servo_DeviceSetById(servo_id, angle, speed);
+}
+
+static void read_health_data(uint8_t *hr, uint8_t *oxygen, bool *finger_detected, uint8_t *status)
+{
+    uint8_t local_hr = 0U;
+    uint8_t local_oxygen = 0U;
+
+    MAX30102_get(&local_hr, &local_oxygen);
+
+    if (hr != NULL) {
+        *hr = local_hr;
+    }
+    if (oxygen != NULL) {
+        *oxygen = local_oxygen;
+    }
+    if (finger_detected != NULL) {
+        *finger_detected = (local_hr != 0U) && (local_oxygen != 0U);
+    }
+    if (status != NULL) {
+        *status = ((local_hr != 0U) || (local_oxygen != 0U)) ? 1U : 2U;
+    }
+}
 
 /* 获取当前系统 tick（需根据实际 HAL 实现） */
 static uint32_t get_tick(void)
@@ -67,10 +117,12 @@ static void send_nak(void)
 static void send_heartbeat(void)
 {
     Frame frame;
-    uint8_t hr = max30102_get_heart_rate();
-    uint8_t oxygen = max30102_get_oxygen();
-    bool finger = max30102_is_finger_detected();
-    uint8_t status = max30102_get_status();
+    uint8_t hr;
+    uint8_t oxygen;
+    uint8_t status;
+    bool finger;
+
+    read_health_data(&hr, &oxygen, &finger, &status);
     
     Proto_BuildHeartbeat(hr, finger ? 1 : 0, oxygen, finger ? 1 : 0, &frame);
     Handler_SendFrame(&frame);
@@ -96,11 +148,14 @@ static void process_oled_frame(const Frame *frame)
                 uint8_t confidence = frame->data[1];
                 uint8_t name_len = frame->data[2];
                 if (frame->len >= 3 + name_len) {
-                    char emotion[MAX_DATA_LEN];
+                    char emotion[MAX_DATA_LEN + 1];
                     memcpy(emotion, &frame->data[3], name_len);
                     emotion[name_len] = '\0';
-                    oled_show_emotion(emotion, confidence);
-                    send_ack();
+                    if (oled_show_emotion(emotion, confidence)) {
+                        send_ack();
+                    } else {
+                        send_nak();
+                    }
                 } else {
                     send_nak();
                 }
@@ -115,11 +170,14 @@ static void process_oled_frame(const Frame *frame)
                 uint8_t y = frame->data[2];
                 uint8_t text_len = frame->data[3];
                 if (frame->len >= 4 + text_len) {
-                    char text[MAX_DATA_LEN];
+                    char text[MAX_DATA_LEN + 1];
                     memcpy(text, &frame->data[4], text_len);
                     text[text_len] = '\0';
-                    oled_show_text(text, x, y);
-                    send_ack();
+                    if (oled_show_text(text, x, y)) {
+                        send_ack();
+                    } else {
+                        send_nak();
+                    }
                 } else {
                     send_nak();
                 }
@@ -129,8 +187,11 @@ static void process_oled_frame(const Frame *frame)
             break;
             
         case OLED_CMD_CLEAR:  // 清屏
-            oled_clear();
-            send_ack();
+            if (oled_clear()) {
+                send_ack();
+            } else {
+                send_nak();
+            }
             break;
             
         default:
@@ -150,8 +211,11 @@ static void process_servo_frame(const Frame *frame)
     uint8_t angle = frame->data[1];
     uint8_t speed = frame->data[2];
     
-    servo_set_angle(servo_id, angle, speed);
-    send_ack();
+    if (servo_set_angle(servo_id, angle, speed)) {
+        send_ack();
+    } else {
+        send_nak();
+    }
 }
 
 static void process_query_sensor_frame(const Frame *frame)
@@ -163,8 +227,17 @@ static void process_query_sensor_frame(const Frame *frame)
 
 static void process_config_frame(const Frame *frame)
 {
-    // TODO: 参数配置处理
-    send_ack();
+    if (frame->len == 4U) {
+        uint32_t interval_ms = ((uint32_t)frame->data[0] << 24) |
+                               ((uint32_t)frame->data[1] << 16) |
+                               ((uint32_t)frame->data[2] << 8) |
+                               (uint32_t)frame->data[3];
+        Handler_SetHeartbeatInterval(interval_ms);
+        send_ack();
+        return;
+    }
+
+    send_nak();
 }
 
 void Handler_OnFrame(const Frame *frame)

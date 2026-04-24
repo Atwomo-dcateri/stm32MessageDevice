@@ -3,10 +3,15 @@
 #include "main.h"
 ////////////////////////////////////////////////////////////////////////////////// 	  
 
-#define MAX30102_INT HAL_GPIO_ReadPin(GPIOB,MAX30102_INT_Pin)
+#if defined(MAX30102_INT_GPIO_Port) && defined(MAX30102_INT_Pin)
+#define MAX30102_INT HAL_GPIO_ReadPin(MAX30102_INT_GPIO_Port, MAX30102_INT_Pin)
+#define MAX30102_WAIT_READY() do { while (MAX30102_INT == GPIO_PIN_SET) { } } while (0)
+#else
+#define MAX30102_WAIT_READY() ((void)0)
+#endif
 
-#define I2C_WR	0		/* Ð´¿ØÖÆbit */
-#define I2C_RD	1		/* ¶Á¿ØÖÆbit */
+#define I2C_WR	0		/* Ð´ï¿½ï¿½ï¿½ï¿½bit */
+#define I2C_RD	1		/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bit */
 
 #define max30102_WR_address 0xAE
 
@@ -50,7 +55,7 @@ void maxim_max30102_read_fifo(uint32_t *pun_red_led, uint32_t *pun_ir_led);
 
 void dis_DrawCurve(uint32_t* data,uint8_t x);
 void MAX30102_get(uint8_t *hr,uint8_t *spo2);
-void MAX30102_data_set();
+void MAX30102_data_set(void);
 
 
 #endif

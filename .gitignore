@@ -15,11 +15,11 @@
 *.map
 *.o
 *.sct
-
+*.log
 # VS Code local files
 .vscode/keil-assistant.log
 .vscode/uv4.log.lock
-
+git-auto-commit.ps1
 # Keil build directories
 MDK-ARM/AiDeviceMessage/
 

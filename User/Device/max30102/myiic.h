@@ -1,15 +1,15 @@
 #ifndef __MAX30102_H
 #define __MAX30102_H
 //////////////////////////////////////////////////////////////////////////////////	 
-//±¾³ÌÐòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬Î´¾­×÷ÕßÐí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍ¾
-//Mini STM32¿ª·¢°å
-//IIC Çý¶¯º¯Êý	   
-//ÕýµãÔ­×Ó@ALIENTEK
-//¼¼ÊõÂÛÌ³:www.openedv.com
-//ÐÞ¸ÄÈÕÆÚ:2010/6/10 
-//°æ±¾£ºV1.0
-//°æÈ¨ËùÓÐ£¬µÁ°æ±Ø¾¿¡£
-//Copyright(C) ÕýµãÔ­×Ó 2009-2019
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ñ§Ï°Ê¹ï¿½Ã£ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½Í¾
+//Mini STM32ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//IIC ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	   
+//ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½@ALIENTEK
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+//ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½:2010/6/10 
+//ï¿½æ±¾ï¿½ï¿½V1.0
+//ï¿½ï¿½È¨ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
+//Copyright(C) ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ 2009-2019
 //All rights reserved
 ////////////////////////////////////////////////////////////////////////////////// 	  
 
@@ -18,8 +18,8 @@
 #include "stdint.h"
 #include "main.h"
 
-#define SCL_GPIO_Port      GPIOB;
-#define SDA_GPIO_Port      GPIOB;
+#define SCL_GPIO_Port      GPIOB
+#define SDA_GPIO_Port      GPIOB
 #define SCL_Pin            GPIO_PIN_5
 #define SDA_Pin            GPIO_PIN_4
 
@@ -29,23 +29,28 @@
     
 #define SDA_H              HAL_GPIO_WritePin(SDA_GPIO_Port, SDA_Pin, GPIO_PIN_SET)
 #define SDA_L              HAL_GPIO_WritePin(SDA_GPIO_Port, SDA_Pin, GPIO_PIN_RESET)
+#if defined(MAX30102_INT_GPIO_Port) && defined(MAX30102_INT_Pin)
 #define MAX_INT_H          HAL_GPIO_WritePin(MAX30102_INT_GPIO_Port, MAX30102_INT_Pin, GPIO_PIN_SET)
+#define MAX_INT_read       HAL_GPIO_ReadPin(MAX30102_INT_GPIO_Port,MAX30102_INT_Pin)
+#else
+#define MAX_INT_H          ((void)0)
+#define MAX_INT_read       GPIO_PIN_RESET
+#endif
 #define SCL_read           HAL_GPIO_ReadPin(SCL_GPIO_Port,SCL_Pin) 
 #define SDA_read           HAL_GPIO_ReadPin(SDA_GPIO_Port,SDA_Pin) 
-#define MAX_INT_read       HAL_GPIO_ReadPin(MAX30102_INT_GPIO_Port,MAX30102_INT_Pin) 
 #define bool int
 #define TRUE 1
 #define FALSE 0 
 
-//IICËùÓÐ²Ù×÷º¯Êý
-void IIC_Init(void);                //³õÊ¼»¯IICµÄIO¿Ú				 
-void IIC_Start(void);				//·¢ËÍIIC¿ªÊ¼ÐÅºÅ
-void IIC_Stop(void);	  			//·¢ËÍIICÍ£Ö¹ÐÅºÅ
-void IIC_Send_Byte(uint8_t txd);			//IIC·¢ËÍÒ»¸ö×Ö½Ú
-uint8_t IIC_Read_Byte(unsigned char ack);//IIC¶ÁÈ¡Ò»¸ö×Ö½Ú
-uint8_t IIC_Wait_Ack(void); 				//IICµÈ´ýACKÐÅºÅ
-void IIC_Ack(void);					//IIC·¢ËÍACKÐÅºÅ
-void IIC_NAck(void);				//IIC²»·¢ËÍACKÐÅºÅ
+//IICï¿½ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void IIC_Init(void);                //ï¿½ï¿½Ê¼ï¿½ï¿½IICï¿½ï¿½IOï¿½ï¿½				 
+void IIC_Start(void);				//ï¿½ï¿½ï¿½ï¿½IICï¿½ï¿½Ê¼ï¿½Åºï¿½
+void IIC_Stop(void);	  			//ï¿½ï¿½ï¿½ï¿½IICÍ£Ö¹ï¿½Åºï¿½
+void IIC_Send_Byte(uint8_t txd);			//IICï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö½ï¿½
+uint8_t IIC_Read_Byte(unsigned char ack);//IICï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½Ö½ï¿½
+uint8_t IIC_Wait_Ack(void); 				//IICï¿½È´ï¿½ACKï¿½Åºï¿½
+void IIC_Ack(void);					//IICï¿½ï¿½ï¿½ï¿½ACKï¿½Åºï¿½
+void IIC_NAck(void);				//IICï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ACKï¿½Åºï¿½
 
 void IIC_Write_One_Byte(uint8_t daddr,uint8_t addr,uint8_t data);
 void IIC_Read_One_Byte(uint8_t daddr,uint8_t addr,uint8_t* data);

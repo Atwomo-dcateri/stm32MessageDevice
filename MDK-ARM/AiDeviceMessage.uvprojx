@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\User;..\User\App;..\User\Device</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\User;..\User\App;..\User\Device;..\User\Device\communication;..\User\Device\max30102;..\User\Device\oled;..\User\Device\servo</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -395,12 +395,47 @@
             <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\Device\pwm.c</FilePath>
+              <FilePath>..\User\Device\servo\pwm.c</FilePath>
             </File>
             <File>
               <FileName>servo_device.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\Device\servo_device.c</FilePath>
+              <FilePath>..\User\Device\servo\servo_device.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_handler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Device\communication\comm_handler.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_parser.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Device\communication\comm_parser.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_protocol.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Device\communication\comm_protocol.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Device\oled\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>algorithm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Device\max30102\algorithm.c</FilePath>
+            </File>
+            <File>
+              <FileName>max30102.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Device\max30102\max30102.c</FilePath>
+            </File>
+            <File>
+              <FileName>myiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Device\max30102\myiic.c</FilePath>
             </File>
           </Files>
         </Group>

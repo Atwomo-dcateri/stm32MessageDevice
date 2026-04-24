@@ -57,6 +57,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define MAX30102_INT_Pin GPIO_PIN_12
+#define MAX30102_INT_GPIO_Port GPIOB
+#define MAX30102_INT_EXTI_IRQn EXTI15_10_IRQn
 
 /* USER CODE BEGIN Private defines */
 

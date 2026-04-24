@@ -17,3 +17,22 @@ void vServoDeviceSetAngle(emServoDevNumTdf emDevNum, emPwmDevNumTdf emDevNump, f
 
     vPwmDeviceSetPulse(emDevNump, ulPulse);
 }
+
+bool Servo_DeviceSetById(uint8_t servo_id, uint8_t angle, uint8_t speed)
+{
+    float mapped_angle;
+
+    (void)speed;
+
+    if (servo_id != 0U) {
+        return false;
+    }
+
+    if (angle > 180U) {
+        angle = 180U;
+    }
+
+    mapped_angle = (float)angle - 90.0f;
+    vServoDeviceSetAngle(SERVO0, PWM0, mapped_angle);
+    return true;
+}

@@ -60,18 +60,6 @@ static uint8_t ringbuf_write(RingBuffer_t *rb, uint8_t byte)
     return 1;
 }
 
-/* 辅助函数：从环形缓冲区读取 */
-static uint8_t ringbuf_read(RingBuffer_t *rb, uint8_t *byte)
-{
-    if (rb->count == 0) {
-        return 0;
-    }
-    *byte = rb->buffer[rb->tail];
-    rb->tail = (rb->tail + 1) % COMM_RX_BUF_SIZE;
-    rb->count--;
-    return 1;
-}
-
 /* 辅助函数：查看但不移除 */
 static uint8_t ringbuf_peek(RingBuffer_t *rb, uint16_t offset, uint8_t *byte)
 {
@@ -177,7 +165,7 @@ void Parser_Process(void)
                     if (data_len > MAX_DATA_LEN) {
                         parser_reset_state();
                     } else {
-                        g_parser.frame_len = 2 + 1 + 1 + data_len + 1 + 1;  // HEAD + TYPE + LEN + DATA + CRC + TAIL
+                        g_parser.frame_len = 2 + 1 + 1 + data_len + 2 + 1;  // HEAD + TYPE + LEN + DATA + CRC(2) + TAIL
                         g_parser.state = PARSER_STATE_DATA;
                     }
                 }
