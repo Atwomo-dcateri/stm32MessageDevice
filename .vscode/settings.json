@@ -8,5 +8,22 @@
     "scminput": false
   },
   "github.copilot.inlineSuggest.enable": false,
-  "github.copilot.editor.enableAutoCompletions": false
+  "github.copilot.editor.enableAutoCompletions": false,
+  // "includePath": [
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\Core\\Inc",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\Drivers\\STM32F1xx_HAL_Driver\\Inc",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\Drivers\\CMSIS\\Include",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\User",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\User\\App",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\User\\Device",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\User\\Device\\communication",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\User\\Device\\max30102",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\User\\Device\\oled",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\User\\Device\\servo",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\Core\\Src",
+  //               "e:\\Xing_P\\CubeTest\\AiDeviceMessage\\Drivers\\STM32F1xx_HAL_Driver\\Src"
+  //           ],
 }
